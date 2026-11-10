@@ -27,4 +27,8 @@
 
 ## 範圍與限制
 
-外部參考文件曾於製作時開啟查閱；check 不會在每次建置時重抓網際網路。未執行跨瀏覽器矩陣或自動螢幕閱讀器驗收。GitHub Actions／Pages 的實際執行狀態，需待 GitHub 帳號連線後才能確認；本機通過不表示遠端已部署。
+外部參考文件曾於製作時開啟查閱；check 不會在每次建置時重抓網際網路。未執行跨瀏覽器矩陣或自動螢幕閱讀器驗收。GitHub Actions／Pages 的實際執行狀態，需待 GitHub 帳號連線後才能確認；本機通過不表示 GitHub 遠端已部署。
+
+## 公開網站
+
+Sites 平台已回報正式部署 succeeded，回傳 `https://ai-learning-notes-lin-2026.clearcup23.chatgpt.site`，權限為 public。另以未登入的 HTTP 請求確認首頁、第一篇文章、styles.css 與 AGENTS.md 均回傳 200。GitHub Repository 與 GitHub Pages 是另外的步驟，目前尚未執行。
