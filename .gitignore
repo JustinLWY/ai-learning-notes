@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.sites-local/
+.openai/.hosting-*/
+.env
+.env.*
+!.env.example
+artifacts/
+submission-private.md
+write-check.txt
+*.log

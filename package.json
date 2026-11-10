@@ -1,0 +1,14 @@
+{
+  "name": "ai-learning-notes",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "由 Markdown 與 AGENTS.md 驅動的 AI 學習筆記網站",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check.mjs",
+    "dev": "node scripts/serve.mjs",
+    "test": "node --test tests/*.test.mjs"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "AI 學習手札",
+  "englishName": "THE LEARNING NOTEBOOK",
+  "description": "把抽象概念拆成步驟，把零散練習收成自己的知識。一本持續生長的 AI 學習手札。",
+  "author": "林威億",
+  "className": "物理系116",
+  "updated": "2026-11-10",
+  "repository": "",
+  "categories": [
+    { "id": "foundations", "name": "觀念入門", "symbol": "01", "description": "先釐清問題，再理解工具。" },
+    { "id": "practice", "name": "動手實作", "symbol": "02", "description": "用一個小練習，把概念變成成果。" },
+    { "id": "workflow", "name": "工作流程", "symbol": "03", "description": "把一次成功，整理成可重複的方法。" }
+  ],
+  "learningPath": ["from-question-to-prompt", "verify-ai-answers", "build-a-static-page", "write-an-agents-file"]
+}

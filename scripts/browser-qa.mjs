@@ -1,0 +1,120 @@
+// Optional local QA: npm install --prefix .sites-local/tooling --no-save --package-lock=false playwright-core
+import { chromium } from '../.sites-local/tooling/node_modules/playwright-core/index.mjs';
+import { mkdir, writeFile } from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import { root } from './content.mjs';
+
+const base = 'http://127.0.0.1:4173';
+const artifacts = path.join(root, 'artifacts');
+await mkdir(artifacts, { recursive: true });
+const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const results = [], errors = [];
+try {
+  const context = await browser.newContext({ viewport: { width: 1440, height: 1050 }, reducedMotion: 'reduce' });
+  const page = await context.newPage();
+  page.on('pageerror', error => errors.push(error.message));
+  const visible = () => page.locator('.library [data-note]:visible').count();
+  await page.goto(base, { waitUntil: 'networkidle' });
+  assert.equal(await visible(), 6);
+  await page.screenshot({ path: path.join(artifacts, 'home-desktop.png'), fullPage: true });
+  results.push('首頁六篇筆記與桌面截圖');
+  await page.locator('[data-category-filter="practice"]').click();
+  assert.equal(await visible(), 2);
+  await page.locator('#search').fill('密碼');
+  assert.equal(await visible(), 1);
+  await page.locator('#search').fill('this-term-does-not-exist');
+  assert.equal(await visible(), 0);
+  assert.ok(await page.locator('#empty-state').isVisible());
+  await page.locator('#reset-filters').click();
+  await page.locator('#search').fill('量綱');
+  assert.equal(await visible(), 1);
+  await page.locator('#search').fill('');
+  results.push('分類、正文搜尋、組合篩選、無結果與重設');
+  const firstSave = page.locator('.library [data-save]').first();
+  const savedSlug = await firstSave.getAttribute('data-save');
+  await firstSave.click();
+  await page.reload({ waitUntil: 'networkidle' });
+  assert.equal(await page.locator('[data-saved-count]').first().textContent(), '1');
+  await page.locator('#saved-filter').click();
+  assert.equal(await visible(), 1);
+  assert.ok(page.url().includes('saved=1'));
+  await page.locator(`.library [data-save="${savedSlug}"]`).click();
+  assert.equal(await visible(), 0);
+  assert.ok((await page.locator('#empty-description').textContent()).includes('還沒有收藏'));
+  await page.locator('#reset-filters').click();
+  results.push('收藏保存、重新整理、收藏空狀態與取消');
+  await page.locator('body').click({ position: { x: 10, y: 200 } });
+  await page.keyboard.press('/');
+  assert.ok(await page.locator('#search').evaluate(el => el === document.activeElement));
+  await page.keyboard.type('暫存區');
+  assert.equal(await visible(), 1);
+  await page.keyboard.press('Escape');
+  assert.equal(await visible(), 6);
+  results.push('鍵盤搜尋與 Escape 重設');
+  await page.goto(`${base}/notes/from-question-to-prompt.html`, { waitUntil: 'networkidle' });
+  assert.equal(await page.locator('.article-toc a[href^="#section-"]').count(), 5);
+  await page.locator('#mark-read').click();
+  await page.reload({ waitUntil: 'networkidle' });
+  assert.equal(await page.locator('#mark-read').getAttribute('aria-pressed'), 'true');
+  await page.locator('.copy-code').first().click();
+  assert.ok((await page.locator('.toast').textContent()).includes('複製'));
+  await page.screenshot({ path: path.join(artifacts, 'article-desktop.png'), fullPage: true });
+  await page.goto(base);
+  assert.equal(await page.locator('[data-path-progress]').textContent(), '1 / 4 篇已讀');
+  results.push('文章目錄、已讀保存、路線進度與程式碼複製回饋');
+  for (const width of [320, 375, 768, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const target of ['/', '/notes/build-a-static-page.html', '/about.html']) {
+      await page.goto(base + target, { waitUntil: 'networkidle' });
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
+      assert.equal(overflow, false, `${target} 在 ${width}px 不應整頁溢出`);
+    }
+    if (width === 375) {
+      await page.goto(base);
+      await page.screenshot({ path: path.join(artifacts, 'home-mobile.png'), fullPage: true });
+    }
+  }
+  results.push('320 / 375 / 768 / 1440px 首頁、文章與關於頁皆無整頁橫向溢出');
+  await page.route('**/repo-preview/**', async route => {
+    const url = new URL(route.request().url());
+    url.pathname = url.pathname.replace('/repo-preview', '');
+    const response = await route.fetch({ url: url.toString() });
+    await route.fulfill({ response });
+  });
+  await page.goto(`${base}/repo-preview/index.html`);
+  await page.locator('.hero-actions .primary').click();
+  assert.ok(page.url().includes('/repo-preview/notes/'));
+  assert.equal(await page.locator('h1').count(), 1);
+  assert.ok((await page.locator('body').evaluate(el => getComputedStyle(el).backgroundColor)) !== 'rgba(0, 0, 0, 0)');
+  results.push('模擬 Repository 子路徑，文章與 CSS 正常載入');
+  await page.unroute('**/repo-preview/**');
+  await page.goto(base);
+  await page.evaluate(() => localStorage.setItem('ai-notebook.saved.v1', '{broken-json'));
+  await page.reload();
+  assert.equal(await visible(), 6);
+  assert.ok((await page.locator('.toast').textContent()).includes('無法讀取'));
+  await page.locator('.library [data-save]').first().click();
+  assert.equal(await page.locator('[data-saved-count]').first().textContent(), '1');
+  results.push('損壞 localStorage 的恢復與後續操作');
+  const restricted = await browser.newContext();
+  await restricted.addInitScript(() => { Object.defineProperty(window, 'localStorage', { get() { throw new DOMException('Blocked', 'SecurityError'); } }); });
+  const restrictedPage = await restricted.newPage();
+  await restrictedPage.goto(base);
+  await restrictedPage.locator('.library [data-save]').first().click();
+  assert.equal(await restrictedPage.locator('[data-saved-count]').first().textContent(), '1');
+  assert.ok((await restrictedPage.locator('.toast').textContent()).includes('無法儲存'));
+  await restricted.close();
+  results.push('儲存權限被拒時保留當次收藏並提示');
+  const nojs = await browser.newContext({ javaScriptEnabled: false });
+  const nojsPage = await nojs.newPage();
+  await nojsPage.goto(`${base}/notes/build-a-static-page.html`);
+  assert.equal(await nojsPage.locator('.prose h2').count(), 5);
+  assert.ok(await nojsPage.locator('pre code').isVisible());
+  await nojs.close();
+  results.push('停用 JavaScript 仍可閱讀完整文章與程式碼');
+  assert.deepEqual(errors, []);
+  await context.close();
+  console.log(JSON.stringify({ passed: results.length, results, pageErrors: errors }, null, 2));
+  await writeFile(path.join(artifacts, 'browser-results.json'), JSON.stringify({ passed: results.length, results, pageErrors: errors }, null, 2));
+} finally { await browser.close(); }
