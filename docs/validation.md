@@ -27,8 +27,10 @@
 
 ## 範圍與限制
 
-外部參考文件曾於製作時開啟查閱；check 不會在每次建置時重抓網際網路。未執行跨瀏覽器矩陣或自動螢幕閱讀器驗收。GitHub Actions／Pages 的實際執行狀態，需待 GitHub 帳號連線後才能確認；本機通過不表示 GitHub 遠端已部署。
+外部參考文件曾於製作時開啟查閱；check 不會在每次建置時重抓網際網路。未執行跨瀏覽器矩陣或自動螢幕閱讀器驗收。
 
 ## 公開網站
 
-Sites 平台已回報正式部署 succeeded，回傳 `https://ai-learning-notes-lin-2026.clearcup23.chatgpt.site`，權限為 public。另以未登入的 HTTP 請求確認首頁、第一篇文章、styles.css 與 AGENTS.md 均回傳 200。GitHub Repository 與 GitHub Pages 是另外的步驟，目前尚未執行。
+Sites 平台已回報正式部署 succeeded，回傳 `https://ai-learning-notes-lin-2026.clearcup23.chatgpt.site`，權限為 public。另以未登入的 HTTP 請求確認首頁、第一篇文章、styles.css 與 AGENTS.md 均回傳 200。
+
+GitHub Repository 已公開上傳至 `https://github.com/JustinLWY/ai-learning-notes`，GitHub Pages 已發布至 `https://justinlwy.github.io/ai-learning-notes/`。Actions 執行 42785877461 的 build、內容檢查、八項測試、產物上傳與 deploy 全部 success；未登入請求也確認 Repository、AGENTS.md、Pages 首頁、文章、CSS 與規則下載皆回傳 200。

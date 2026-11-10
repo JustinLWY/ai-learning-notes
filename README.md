@@ -15,7 +15,7 @@
 
 原始碼：[JustinLWY/ai-learning-notes](https://github.com/JustinLWY/ai-learning-notes)。
 
-公開網站：[AI 學習手札](https://ai-learning-notes-lin-2026.clearcup23.chatgpt.site)。GitHub Pages 發布狀態見 [發布狀態](docs/publication.md)。
+公開網站：[AI 學習手札 · GitHub Pages](https://justinlwy.github.io/ai-learning-notes/)。另提供 [Sites 網址](https://ai-learning-notes-lin-2026.clearcup23.chatgpt.site)。完整紀錄見 [發布狀態](docs/publication.md)。
 
 ## 本機啟動
 
