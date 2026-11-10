@@ -5,7 +5,7 @@
   "author": "林威億",
   "className": "物理系116",
   "updated": "2026-11-10",
-  "repository": "",
+  "repository": "https://github.com/JustinLWY/ai-learning-notes",
   "categories": [
     { "id": "foundations", "name": "觀念入門", "symbol": "01", "description": "先釐清問題，再理解工具。" },
     { "id": "practice", "name": "動手實作", "symbol": "02", "description": "用一個小練習，把概念變成成果。" },

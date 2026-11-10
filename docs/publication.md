@@ -8,6 +8,6 @@
 
 已發布網站來源版本：`c9b5e4e233f21d7bb105854b2ac828c52bafcbb8`。之後的發布紀錄文件更新不影響網站 HTML、CSS 或 JavaScript。
 
-GitHub 尚未登入或連線，尚未建立使用者的公開 Repository。
+GitHub 帳號已連線，並已建立公開 Repository：https://github.com/JustinLWY/ai-learning-notes 。目前正在上傳來源與設定 GitHub Pages。
 
-GitHub Pages 工作流程已提供在 `.github/workflows/pages.yml`，詳細操作見 deployment.md。作業要求的 GitHub Repository 連結仍需完成，不能以其他託管取代。
+GitHub Pages 工作流程位於 `.github/workflows/pages.yml`，將在來源推送後執行。實際網址與成功結果會在部署確認後更新。

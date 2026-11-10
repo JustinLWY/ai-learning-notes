@@ -13,7 +13,9 @@
 - 響應式版面、鍵盤焦點、搜尋快捷鍵 `/`、略過導覽與減少動畫設定。
 - 可從網站下載 AGENTS.md 與新文章範本。
 
-公開網址與 GitHub 上傳狀態見 [發布狀態](docs/publication.md)。若該文件標記未完成，請勿把預定網址當作已發布成果。
+原始碼：[JustinLWY/ai-learning-notes](https://github.com/JustinLWY/ai-learning-notes)。
+
+公開網站：[AI 學習手札](https://ai-learning-notes-lin-2026.clearcup23.chatgpt.site)。GitHub Pages 發布狀態見 [發布狀態](docs/publication.md)。
 
 ## 本機啟動
 
